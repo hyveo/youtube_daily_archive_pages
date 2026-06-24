@@ -25,7 +25,7 @@
           <div class="avatar">겸손<br />공장</div>
           <div>
             <p id="channelTitle" class="channel-title">김어준의 겸손은힘들다 뉴스공장</p>
-            <p id="publishedDate" class="channel-date">2026. 6. 23.</p>
+            <p id="publishedDate" class="channel-date">2026. 6. 23. 13:11 KST</p>
           </div>
           <button class="subscribe-button" type="button">구독</button>
         </div>
@@ -65,7 +65,12 @@
             </h1>
           </header>
 
-          <p class="editor">edited by <a id="reportEditor" href="./index.html">hyveo</a></p>
+          <p class="editor">
+            <span>edited by <a id="reportEditor" href="./index.html">hyveo</a></span>
+            <span id="reportPublishedDate" class="report-meta-item">발행일 2026. 6. 23. 13:11 KST</span>
+            <span id="reportGeneratedAt" class="report-meta-item">생성일 2026. 6. 24. 17:30 KST</span>
+            <span id="reportSummaryUpdatedAt" class="report-meta-item">요약 갱신일 2026. 6. 24. 17:30 KST</span>
+          </p>
 
           <p id="reportLead" class="lead">
             김경일 교수의 심리학과 투자 심리 분석, 시장 변동성과 심리적 요인에 대한 설명
@@ -103,6 +108,9 @@
         sideScript: document.querySelector("#sideScript"),
         reportTitle: document.querySelector("#reportTitle"),
         reportEditor: document.querySelector("#reportEditor"),
+        reportPublishedDate: document.querySelector("#reportPublishedDate"),
+        reportGeneratedAt: document.querySelector("#reportGeneratedAt"),
+        reportSummaryUpdatedAt: document.querySelector("#reportSummaryUpdatedAt"),
         reportLead: document.querySelector("#reportLead"),
         reportDivider: document.querySelector("#reportDivider"),
         reportToc: document.querySelector("#reportToc"),
@@ -155,11 +163,21 @@
         if (!/^\d{4}-\d{2}-\d{2}/.test(value)) return "";
         const date = new Date(value);
         if (Number.isNaN(date.getTime())) return value.slice(0, 10);
-        return new Intl.DateTimeFormat("ko-KR", {
+        const parts = new Intl.DateTimeFormat("ko-KR", {
           year: "numeric",
           month: "numeric",
-          day: "numeric"
-        }).format(date);
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+          timeZone: "Asia/Seoul"
+        }).formatToParts(date);
+        const part = (type) => parts.find((item) => item.type === type)?.value || "";
+        return `${part("year")}. ${Number(part("month"))}. ${Number(part("day"))}. ${part("hour")}:${part("minute")} KST`;
+      }
+
+      function formatKoreanDateOrDash(value) {
+        return formatKoreanDate(value) || "-";
       }
 
       function transcriptFilename(video) {
@@ -346,8 +364,12 @@
           detailElements.videoPreview.href = video.url || `https://www.youtube.com/watch?v=${videoId}`;
           detailElements.videoThumb.src = video.thumbnail || `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
           detailElements.videoThumb.alt = video.title || "영상 썸네일";
-          detailElements.channelTitle.textContent = video.channelTitle || "";
-          detailElements.publishedDate.textContent = formatKoreanDate(video.publishedAt);
+        detailElements.channelTitle.textContent = video.channelTitle || "";
+          const publishedDate = formatKoreanDate(video.publishedAt);
+          detailElements.publishedDate.textContent = publishedDate || "-";
+          detailElements.reportPublishedDate.textContent = `발행일 ${formatKoreanDateOrDash(video.publishedAt)}`;
+          detailElements.reportGeneratedAt.textContent = `생성일 ${formatKoreanDateOrDash(summary?.generatedAt)}`;
+          detailElements.reportSummaryUpdatedAt.textContent = `요약 갱신일 ${formatKoreanDateOrDash(summary?.summaryUpdatedAt)}`;
           renderReport(summary);
           setRailPanelsCollapsed(getDetailView() !== "script" && hasAiReport(summary));
           renderChapters(video.chapters || []);
