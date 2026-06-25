@@ -379,6 +379,30 @@ body.modal-open { overflow: hidden; }
   line-height: 1.4;
   margin-top: 2px;
 }
+
+.live-status-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 1.4;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.live-status-badge.live {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.live-status-badge.upcoming {
+  background: #fef3c7;
+  color: #92400e;
+}
+
 .meta, .tags { color: #64748b; font-size: 0.9rem; line-height: 1.5; }
 
 .enrichment-badges { display: inline-flex; gap: 6px; margin-left: 8px; vertical-align: middle; flex-wrap: wrap; }

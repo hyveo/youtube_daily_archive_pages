@@ -315,6 +315,16 @@ function renderEnrichmentBadges(video) {
   `;
 }
 
+function renderLiveStatusBadge(video) {
+  if (video.liveStatus === "live") {
+    return '<span class="live-status-badge live">방송중</span>';
+  }
+  if (video.liveStatus === "upcoming") {
+    return '<span class="live-status-badge upcoming">방송예정</span>';
+  }
+  return "";
+}
+
 function getSimpleSummary(video, summaryData) {
   if (hasReportContent(summaryData)) {
     return { headline: getSummaryHeadline(summaryData), body: "", hasReport: true };
@@ -392,7 +402,7 @@ function renderVideoCard(video) {
           </div>
         </div>
         <div class="video-summary">
-          <h4>${escapeHtml(video.title)}</h4>
+          <h4>${escapeHtml(video.title)}${renderLiveStatusBadge(video)}</h4>
           <div class="meta">
             채널 ${escapeHtml(video.channelTitle)} | 재생시간 ${escapeHtml(video.duration)} | #${escapeHtml(video.videoId)}
             ${renderEnrichmentBadges(video)}
