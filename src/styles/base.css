@@ -17,6 +17,18 @@ body {
   min-height: 100vh;
 }
 
+.site-ad-slot {
+  display: block;
+  width: min(100% - 32px, 970px);
+  min-height: 90px;
+  margin: 24px auto;
+  overflow: hidden;
+}
+
+.site-ad-slot--detail {
+  width: min(100% - 32px, 728px);
+}
+
 a {
   color: inherit;
 }
