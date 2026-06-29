@@ -172,7 +172,7 @@
           "title": "시청자 사연 & 클로징"
         }
       ],
-      "hasTranscript": "N",
+      "hasTranscript": "Y",
       "hasSummary": "N"
     },
     {
@@ -230,7 +230,7 @@
           "title": "클로징"
         }
       ],
-      "hasTranscript": "N",
+      "hasTranscript": "Y",
       "hasSummary": "N"
     },
     {
@@ -292,7 +292,7 @@
           "title": "클로징"
         }
       ],
-      "hasTranscript": "N",
+      "hasTranscript": "Y",
       "hasSummary": "N"
     },
     {
@@ -354,7 +354,7 @@
           "title": "시청자 사연 & 클로징"
         }
       ],
-      "hasTranscript": "N",
+      "hasTranscript": "Y",
       "hasSummary": "N"
     },
     {
@@ -416,7 +416,7 @@
           "title": "시청자 사연 & 클로징"
         }
       ],
-      "hasTranscript": "N",
+      "hasTranscript": "Y",
       "hasSummary": "N"
     },
     {
@@ -478,7 +478,7 @@
           "title": "시청자 사연 & 클로징"
         }
       ],
-      "hasTranscript": "N",
+      "hasTranscript": "Y",
       "hasSummary": "N"
     },
     {
@@ -537,7 +537,7 @@
           "title": "시청자 사연 & 클로징"
         }
       ],
-      "hasTranscript": "N",
+      "hasTranscript": "Y",
       "hasSummary": "N"
     },
     {
@@ -558,7 +558,7 @@
         "#이광수"
       ],
       "chapters": [],
-      "hasTranscript": "N",
+      "hasTranscript": "Y",
       "hasSummary": "N"
     }
   ]
