@@ -1,0 +1,24 @@
+{
+  "categories": [
+    {
+      "id": "economy",
+      "label": "경제",
+      "icon": "경제"
+    },
+    {
+      "id": "current_affairs",
+      "label": "시사",
+      "icon": "시사"
+    },
+    {
+      "id": "science",
+      "label": "과학",
+      "icon": "과학"
+    },
+    {
+      "id": "culture",
+      "label": "문화",
+      "icon": "문화"
+    }
+  ]
+}

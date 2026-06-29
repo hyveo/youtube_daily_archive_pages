@@ -1,0 +1,36 @@
+{
+  "hero": {
+    "channelId": "12siemannayo",
+    "mode": "latestSummary"
+  },
+  "featuredChannelIds": [
+    "12siemannayo"
+  ],
+  "shortcuts": [
+    {
+      "label": "전체",
+      "icon": "▦",
+      "href": "channel.html"
+    },
+    {
+      "label": "경제",
+      "icon": "경제",
+      "href": "channel.html?category=경제"
+    },
+    {
+      "label": "시사",
+      "icon": "시사",
+      "href": "channel.html?category=시사"
+    },
+    {
+      "label": "과학",
+      "icon": "과학",
+      "href": "channel.html?category=과학"
+    },
+    {
+      "label": "문화",
+      "icon": "문화",
+      "href": "channel.html?category=문화"
+    }
+  ]
+}

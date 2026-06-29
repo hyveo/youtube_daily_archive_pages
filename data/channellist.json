@@ -1,0 +1,33 @@
+{
+  "defaultChannelId": "12siemannayo",
+  "channels": [
+    {
+      "id": "12siemannayo",
+      "title": "12시에 만나요",
+      "name": "겸손은힘들다 뉴스공장",
+      "dataPath": "12siemannayo",
+      "category": "시사·경제",
+      "categories": [
+        "경제",
+        "시사"
+      ],
+      "avatarLabel": "겸손",
+      "heroImage": "https://i.ytimg.com/vi/9UrMKAyR2YQ/maxresdefault.jpg",
+      "playlistUrl": "https://www.youtube.com/playlist?list=PLpDZdhM6kelSHHNdphTwAWuxxwbI4kGyX",
+      "youtubeUrl": "https://www.youtube.com/@gyeomsonisnothing",
+      "shortDescription": "국민 투자자를 위한 신경안정제 - 매일의 방송을 4분 요약으로. 자세히는 ‘정보’ 탭에서.",
+      "headline": "‘약속’을 지키러 이광수-박시동이 돌아왔다.",
+      "body": [
+        "“변동성 큰 요즘 시장이 무서워요🥹”",
+        "“‘코리아 디스카운트’, 그거 다 알겠는데 그래서 뭘 사라고요?😤”",
+        "수익률 마이너스에도 어떻게든 익절 후 매수만을 기다리는 당신🫠",
+        "남들 다 사는데, 나만 못 샀단 불안감에 고점에 사서 구조대만 기다리는 당신!😭"
+      ],
+      "closing": "4월 20일 월요일 12시! 국민 투자자를 위한 신경안정제 이광수-박시동이 찾아옵니다 :)",
+      "stats": {
+        "episodeCount": 49,
+        "archiveDays": 95
+      }
+    }
+  ]
+}
