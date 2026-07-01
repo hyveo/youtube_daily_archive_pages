@@ -676,7 +676,35 @@
     return rankings && Array.isArray(rankings.items) ? rankings.items : [];
   }
 
-  function getRankingVideos(app, bundle, period, category){
+  function getRankingMetaMap(rankings, period){
+    return getRankingItems(rankings, period).reduce(function(acc, item){
+      if (item && item.videoId) acc[item.videoId] = item;
+      return acc;
+    }, {});
+  }
+
+  function getRankingSortTime(row){
+    var summary = row && row.summary ? row.summary : {};
+    var video = row && row.video ? row.video : {};
+    var value = summary.summaryUpdatedAt || video.summaryUpdatedAt || video.publishedAt || '';
+    var time = new Date(value).getTime();
+    return isNaN(time) ? 0 : time;
+  }
+
+  function getSummaryRankingRows(app, bundle, period, category){
+    var metaMap = getRankingMetaMap(app.rankings, period);
+    return bundle.videos.filter(function(video){ return bundle.summaries[video.videoId]; }).map(function(video){
+      var item = metaMap[video.videoId] || {};
+      return { channel: bundle.channel, video: video, summary: bundle.summaries[video.videoId], score: item.score, trend: item.trend };
+    }).filter(function(row){ return matchesRankingCategory(row.channel, category); });
+  }
+
+  function getRankingVideos(app, bundle, period, category, sort){
+    if (sort === 'latest'){
+      return getSummaryRankingRows(app, bundle, period, category).sort(function(a, b){
+        return getRankingSortTime(b) - getRankingSortTime(a);
+      }).slice(0, 12);
+    }
     var items = getRankingItems(app.rankings, period);
     if (items.length){
       return items.map(function(item){
@@ -687,9 +715,7 @@
         return { channel: channel, video: video, summary: bundle.summaries[video.videoId], score: item.score, trend: item.trend };
       }).filter(Boolean).filter(function(row){ return matchesRankingCategory(row.channel, category); });
     }
-    return bundle.videos.filter(function(video){ return bundle.summaries[video.videoId]; }).map(function(video){
-      return { channel: bundle.channel, video: video, summary: bundle.summaries[video.videoId] };
-    }).filter(function(row){ return matchesRankingCategory(row.channel, category); }).slice(0, 12);
+    return getSummaryRankingRows(app, bundle, period, category).slice(0, 12);
   }
 
   function matchesRankingCategory(channel, category){
@@ -702,17 +728,22 @@
     options = options || {};
     var activeCategory = options.category || '';
     var activePeriod = options.period || (app.rankings && app.rankings.period) || 'daily';
-    var allRows = getRankingVideos(app, bundle, activePeriod, '');
+    var activeSort = options.sort || 'latest';
+    var allRows = getRankingVideos(app, bundle, activePeriod, '', activeSort);
     if (!hasValue(allRows)) return '';
-    var rows = getRankingVideos(app, bundle, activePeriod, activeCategory);
+    var rows = getRankingVideos(app, bundle, activePeriod, activeCategory, activeSort);
     var categories = getVisibleCategoryItems(app).map(function(item){ return item.label; });
+    var sorts = [
+      { key: 'latest', label: '최신순' },
+      { key: 'recommended', label: '추천순' }
+    ];
     var periods = [
       { key: 'daily', label: '일간' },
       { key: 'weekly', label: '주간' },
       { key: 'monthly', label: '월간' }
     ];
-    return '<section class="section ranking-section" data-ranking-section data-ranking-category="' + escapeAttr(activeCategory) + '" data-ranking-period="' + escapeAttr(activePeriod) + '"><div class="section-head"><div><h2 class="section-title">리포트 랭킹 <span class="section-subtitle">인기</span></h2></div></div>' +
-      '<div class="tabs sx" aria-label="리포트 랭킹 카테고리"><button class="tab-pill' + (!activeCategory ? ' is-active' : '') + '" type="button" data-ranking-category="">추천순</button>' + categories.map(function(category){ return '<button class="tab-pill' + (activeCategory === category ? ' is-active' : '') + '" type="button" data-ranking-category="' + escapeAttr(category) + '">' + escapeHtml(category) + '</button>'; }).join('') + '</div>' +
+    return '<section class="section ranking-section" data-ranking-section data-ranking-category="' + escapeAttr(activeCategory) + '" data-ranking-period="' + escapeAttr(activePeriod) + '" data-ranking-sort="' + escapeAttr(activeSort) + '"><div class="section-head"><div><h2 class="section-title">리포트 랭킹 <span class="section-subtitle">인기</span></h2></div></div>' +
+      '<div class="tabs sx" aria-label="리포트 랭킹 카테고리">' + sorts.map(function(sort){ return '<button class="tab-pill' + (!activeCategory && activeSort === sort.key ? ' is-active' : '') + '" type="button" data-ranking-sort="' + escapeAttr(sort.key) + '">' + escapeHtml(sort.label) + '</button>'; }).join('') + categories.map(function(category){ return '<button class="tab-pill' + (activeCategory === category ? ' is-active' : '') + '" type="button" data-ranking-category="' + escapeAttr(category) + '">' + escapeHtml(category) + '</button>'; }).join('') + '</div>' +
       '<div class="ranking-meta"><div class="ranking-periods" aria-label="리포트 랭킹 기간">' + periods.map(function(period){ return '<button type="button" class="' + (activePeriod === period.key ? 'is-active' : '') + '" data-ranking-period="' + escapeAttr(period.key) + '">' + escapeHtml(period.label) + '</button>'; }).join('') + '</div><span>' + escapeHtml(formatDateDot((app.rankings && app.rankings.updatedAt) || (allRows[0] && allRows[0].video.publishedAt))) + ' ⓘ</span></div>' +
       (rows.length ? '<div class="ranking-grid">' +
       rows.slice(0, 12).map(function(row, index){
@@ -904,7 +935,7 @@
     return '<div class="detail-kicker">' + escapeHtml(channel.name || video.channelTitle || '') + ' · AI 리포트 · ' + escapeHtml(formatDatePlain(video.publishedAt)) + '</div>' +
       '<div class="detail-title-row"><h1 class="detail-title">' + escapeHtml(title) + '</h1><div class="detail-actions">' + (summaryReady ? renderLikeButton(video.videoId, rankings) : '') + renderBookmarkButton(video.videoId) + '<button class="icon-circle" type="button" data-share aria-label="공유"><svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.4"/><circle cx="6" cy="12" r="2.4"/><circle cx="18" cy="19" r="2.4"/><path d="M8 11l8-5M8 13l8 5"/></svg></button></div></div>' +
       renderMeta(channel, video, summary) +
-      (summaryReady ? renderSummaryArticle(summary) : renderPreparingState()) +
+      (summaryReady ? renderSummaryArticle(summary, channel) : renderPreparingState()) +
       (summaryReady ? renderBottomRatePanel(video.videoId) : '');
   }
 
@@ -942,7 +973,50 @@
     return '<section class="pending-report"><div class="pending-report-copy"><div class="ai-lead-title"><span>✦</span> AI 리포트가 준비 중입니다.</div></div><a class="primary-pill pending-discord" href="https://discord.gg/Ajv9563Gf" target="_blank" rel="noreferrer">디스코드 알림받기</a></section>';
   }
 
-  function renderSummaryArticle(summary){
+  function hasSafeVisualHighlightPath(path){
+    var text = String(path || '').trim();
+    if (!text) return false;
+    if (/^https?:\/\//i.test(text)) return true;
+    return text.indexOf('..') < 0 && text.indexOf('\\') < 0;
+  }
+
+  function getVisualHighlights(summary){
+    if (!summary || !Array.isArray(summary.visualHighlights)) return [];
+    return summary.visualHighlights.filter(function(item){
+      return item && hasSafeVisualHighlightPath(item.imagePath) && (hasValue(item.title) || hasValue(item.caption));
+    }).slice(0, 3);
+  }
+
+  function visualHighlightImageSrc(channel, item){
+    var path = String(item && item.imagePath || '').trim();
+    if (!path) return '';
+    if (/^https?:\/\//i.test(path)) return path;
+    path = path.replace(/^\/+/, '');
+    if (path.indexOf('..') >= 0 || path.indexOf('\\') >= 0) return '';
+    if (path.indexOf('data/') === 0) return BASE_PATH + path;
+    return DATA_ROOT + '/' + channelPath(channel) + '/' + path;
+  }
+
+  function renderVisualHighlights(summary, channel){
+    var items = getVisualHighlights(summary);
+    if (!hasValue(items)) return '';
+    var cards = items.map(function(item, index){
+      var imageSrc = visualHighlightImageSrc(channel, item);
+      if (!imageSrc) return '';
+      var title = item.title || ('중요 장면 ' + (index + 1));
+      var href = item.sourceUrl || summary.sourceUrl || '#';
+      return '<a class="visual-card" href="' + escapeAttr(href) + '" target="_blank" rel="noreferrer">' +
+        '<span class="visual-media"><img src="' + escapeAttr(imageSrc) + '" alt="' + escapeAttr(title) + '" loading="lazy"><span class="visual-time">' + escapeHtml(item.timestamp || '') + '</span></span>' +
+        '<strong>' + escapeHtml(title) + '</strong>' +
+        (hasValue(item.caption) ? '<p>' + escapeHtml(item.caption) + '</p>' : '') +
+        (hasValue(item.whyImportant) ? '<small>' + escapeHtml(item.whyImportant) + '</small>' : '') +
+        '</a>';
+    }).filter(hasValue).join('');
+    if (!cards) return '';
+    return '<section id="visual-highlights" class="report-section visual-section"><p class="section-label">중요 장면</p><h2>영상으로 확인할 포인트</h2><div class="visual-grid">' + cards + '</div></section>';
+  }
+
+  function renderSummaryArticle(summary, channel){
     var html = '';
     if (hasValue(summary.headline) || hasValue(summary.insightSummary)){
       html += '<section class="ai-lead"><div class="ai-lead-title"><span>✦</span> AI 분석 리포트</div>' +
@@ -953,6 +1027,7 @@
     if (hasValue(summary.insightSummary)){
       html += '<section id="insight" class="report-section insight-section"><p class="section-label">핵심 해석</p><h2>오늘의 Insight</h2><p class="insight-copy">' + escapeHtml(summary.insightSummary) + '</p></section>';
     }
+    html += renderVisualHighlights(summary, channel);
     if (hasValue(summary.readerTakeaways) || hasValue(summary.watchPoints)){
       html += '<section id="investor-view" class="report-section split-section"><p class="section-label">관점 정리</p><h2>투자자가 가져갈 관점과 체크포인트</h2><div class="split-grid">' +
         renderListColumn('가져갈 관점', summary.readerTakeaways) + renderListColumn('앞으로 볼 것', summary.watchPoints, 'muted-list') + '</div></section>';
@@ -971,12 +1046,17 @@
 
   function renderToc(summary, className){
     var top = [];
-    if (hasValue(summary.insightSummary)) top.push({ href: '#insight', num: '1', title: '오늘의 Insight' });
-    if (hasValue(summary.readerTakeaways) || hasValue(summary.watchPoints)) top.push({ href: '#investor-view', num: '2', title: '투자 관점과 체크포인트' });
-    if (hasValue(summary.strategyFrame)) top.push({ href: '#strategy-frame', num: '3', title: '전략 판단 체크프레임' });
-    if (hasValue(summary.sections)) top.push({ href: '#chapter-summary', num: '4', title: '챕터별 요약' });
+    function addTop(href, title){
+      top.push({ href: href, num: String(top.length + 1), title: title });
+    }
+    if (hasValue(summary.insightSummary)) addTop('#insight', '오늘의 Insight');
+    if (hasValue(getVisualHighlights(summary))) addTop('#visual-highlights', '중요 장면');
+    if (hasValue(summary.readerTakeaways) || hasValue(summary.watchPoints)) addTop('#investor-view', '투자 관점과 체크포인트');
+    if (hasValue(summary.strategyFrame)) addTop('#strategy-frame', '전략 판단 체크프레임');
+    if (hasValue(summary.sections)) addTop('#chapter-summary', '챕터별 요약');
+    var chapterNum = String(top.length || 1);
     var subs = (summary.toc || summary.sections || []).map(function(item, index){
-      return { href: '#sec-' + (index + 1), num: '4.' + (index + 1), title: item.title };
+      return { href: '#sec-' + (index + 1), num: chapterNum + '.' + (index + 1), title: item.title };
     });
     var rows = top.concat(subs);
     if (!hasValue(rows)) return '';
@@ -1090,7 +1170,7 @@
   }
 
   function renderServiceBox(){
-    return '<aside class="service-box"><div class="service-row"><strong>서비스 소개<span>원본 방송 기반 AI 분석 리포트</span></strong></div><div class="service-row"><strong>운영 정책<span>원본 링크 · 짧은 출처 표기 · 자막 비공개</span></strong></div><div class="service-row"><strong>문의 · 제휴<span><a href="mailto:app.hyveo@gmail.com">이메일 보내기</a></span></strong></div><div class="service-row"><strong>버전<span>v1.0.0 · 2026.06</span></strong></div></aside>';
+    return '<aside class="service-box"><div class="service-row"><strong>서비스 소개<span>원본 방송 기반 AI 분석 리포트</span></strong></div><div class="service-row"><strong>운영 정책<span>원본 링크 · 짧은 출처 표기 · 자막 비공개</span></strong></div><div class="service-row"><strong>문의 · 제휴<span class="service-actions"><a href="mailto:app.hyveo@gmail.com">이메일 보내기</a><span class="service-separator" aria-hidden="true">|</span><a class="support-link" href="https://fairy.hada.io/@daily-ai-insight" target="_blank" rel="noopener noreferrer" aria-label="개발자 후원하러 가기" title="개발자 후원하러 가기"><img class="support-heart" src="src/assets/support-heart.png" alt=""></a></span></strong></div><div class="service-row"><strong>버전<span>v1.0.0 · 2026.06</span></strong></div></aside>';
   }
 
   function applyHomeCategoryFilter(category){
@@ -1119,6 +1199,11 @@
   function getCurrentRankingPeriod(){
     var section = document.querySelector('[data-ranking-section]');
     return section ? (section.getAttribute('data-ranking-period') || 'daily') : 'daily';
+  }
+
+  function getCurrentRankingSort(){
+    var section = document.querySelector('[data-ranking-section]');
+    return section ? (section.getAttribute('data-ranking-sort') || 'latest') : 'latest';
   }
 
   function updateRankingSection(options){
@@ -1182,7 +1267,18 @@
       e.preventDefault();
       updateRankingSection({
         category: getCurrentRankingCategory(),
-        period: rankingPeriod.getAttribute('data-ranking-period') || 'daily'
+        period: rankingPeriod.getAttribute('data-ranking-period') || 'daily',
+        sort: getCurrentRankingSort()
+      });
+      return;
+    }
+    var rankingSort = e.target.closest('button[data-ranking-sort]');
+    if (rankingSort){
+      e.preventDefault();
+      updateRankingSection({
+        category: '',
+        period: getCurrentRankingPeriod(),
+        sort: rankingSort.getAttribute('data-ranking-sort') || 'latest'
       });
       return;
     }
@@ -1191,7 +1287,8 @@
       e.preventDefault();
       updateRankingSection({
         category: rankingCategory.getAttribute('data-ranking-category') || '',
-        period: getCurrentRankingPeriod()
+        period: getCurrentRankingPeriod(),
+        sort: getCurrentRankingSort()
       });
       return;
     }

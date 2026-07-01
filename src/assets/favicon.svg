@@ -1,7 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
   <title id="title">Daily AI Insight favicon</title>
-  <desc id="desc">Minimal white favicon with a red vertical rule and black I mark.</desc>
-  <rect width="64" height="64" rx="12" fill="#fff"/>
-  <rect x="14" y="14" width="5" height="36" fill="#e50914"/>
-  <text x="35" y="34" fill="#14110f" font-family="Georgia" font-size="34" font-weight="700" text-anchor="middle" dominant-baseline="middle">I</text>
+  <desc id="desc">Paper-toned favicon with stacked Daily AI Insight text.</desc>
+  <rect width="64" height="64" rx="10" fill="#fcfbf8"/>
+  <g fill="#15110c" font-family="Georgia, 'Times New Roman', serif" font-weight="700" text-anchor="start">
+    <text x="8" y="20" font-size="17">Daily</text>
+    <text x="8" y="38" font-size="17">AI</text>
+    <text x="8" y="56" font-size="17">Insight</text>
+  </g>
 </svg>

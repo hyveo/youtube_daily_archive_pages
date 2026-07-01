@@ -1592,6 +1592,7 @@ button {
 
 .insight-section h2,
 .split-section h2,
+.visual-section h2,
 .frame-section h2,
 .chapter-heading h2 {
   display: block;
@@ -1604,6 +1605,78 @@ button {
   font-family: "Noto Serif KR", serif;
   font-size: 18px;
   line-height: 1.8;
+}
+
+.visual-section {
+  margin-top: 46px;
+  padding-top: 34px;
+  border-top: 1px solid var(--line);
+}
+
+.visual-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 22px;
+}
+
+.visual-card {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  color: inherit;
+}
+
+.visual-card:hover strong {
+  color: var(--accent);
+}
+
+.visual-media {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #f3eee4;
+}
+
+.visual-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.visual-time {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  padding: 4px 7px;
+  background: rgba(33, 28, 21, 0.86);
+  color: #fff;
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+}
+
+.visual-card strong {
+  color: #211c15;
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.35;
+}
+
+.visual-card p,
+.visual-card small {
+  margin: 0;
+  color: #4b443a;
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.visual-card small {
+  color: #7d756a;
 }
 
 .split-section,
@@ -1855,6 +1928,19 @@ button {
   letter-spacing: -0.02em;
 }
 
+.info-intro-visual {
+  width: 100%;
+  margin: 0 0 22px;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.info-intro-visual img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 .service-box-full {
   width: 100%;
   margin: 0;
@@ -1994,6 +2080,63 @@ button {
 
 .service-row a:hover {
   color: var(--accent);
+}
+
+.service-row .service-actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  max-width: none;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+.service-row .service-actions .service-separator {
+  display: inline-flex;
+  max-width: none;
+  margin: 0;
+  overflow: visible;
+  text-align: center;
+  text-overflow: clip;
+  color: #c5bdb0;
+  font-family: inherit;
+  font-size: 11px;
+}
+
+.support-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  perspective: 120px;
+}
+
+.support-heart {
+  display: block;
+  width: 17px;
+  height: 17px;
+  object-fit: contain;
+  transform-origin: 50% 50%;
+  backface-visibility: visible;
+  animation: support-heart-spin 2.6s linear infinite;
+}
+
+@keyframes support-heart-spin {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .support-heart {
+    animation: none;
+  }
 }
 
 .mobile-info-footer {
@@ -3028,6 +3171,7 @@ button {
 
   .insight-section h2,
   .split-section h2,
+  .visual-section h2,
   .frame-section h2,
   .chapter-heading h2 {
     font-size: 22px;
@@ -3040,10 +3184,29 @@ button {
   }
 
   .split-section,
+  .visual-section,
   .frame-section,
   .chapter-heading {
     margin-top: 34px;
     padding-top: 26px;
+  }
+
+  .visual-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .visual-card {
+    gap: 9px;
+  }
+
+  .visual-card strong {
+    font-size: 14px;
+  }
+
+  .visual-card p,
+  .visual-card small {
+    font-size: 12.5px;
   }
 
   .split-grid {
@@ -3268,6 +3431,11 @@ button {
 
   .info-page-title {
     display: none;
+  }
+
+  .info-intro-visual {
+    margin: 0 0 16px;
+    border-radius: 18px;
   }
 
   .info-main .service-box {

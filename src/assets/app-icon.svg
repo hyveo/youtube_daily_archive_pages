@@ -1,11 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
   <title id="title">Daily AI Insight app icon</title>
-  <desc id="desc">White rounded square with a red vertical rule and stacked Daily AI Insight text.</desc>
-  <rect width="1024" height="1024" rx="216" fill="#fff"/>
-  <rect x="230" y="296" width="42" height="432" fill="#e50914"/>
-  <g fill="#14110f" font-family="Georgia" font-size="124" font-weight="700" text-anchor="start" dominant-baseline="middle">
-    <text x="330" y="368">Daily</text>
-    <text x="330" y="512">AI</text>
-    <text x="330" y="656">Insight</text>
+  <desc id="desc">Paper-toned app icon with stacked Daily AI Insight text.</desc>
+  <rect width="1024" height="1024" rx="180" fill="#fcfbf8"/>
+  <g fill="#15110c" font-family="Georgia, 'Times New Roman', serif" font-weight="700" text-anchor="start">
+    <text x="150" y="310" font-size="240">Daily</text>
+    <text x="150" y="540" font-size="240">AI</text>
+    <text x="150" y="770" font-size="240">Insight</text>
   </g>
 </svg>

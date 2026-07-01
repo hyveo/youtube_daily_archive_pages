@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Daily AI Insight introduction card on paper background</title>
+  <desc id="desc">Daily AI Insight 소개 이미지. 종이색 배경, 빨간 세로선, 서비스명과 AI 리포트 설명 문구가 배치되어 있다.</desc>
+  <rect width="1200" height="630" fill="#fcfbf8"/>
+  <rect x="112" y="112" width="18" height="406" fill="#e3120b"/>
+  <g fill="#15110c">
+    <text x="184" y="214" font-family="Georgia, 'Times New Roman', serif" font-size="78" font-weight="700">Daily</text>
+    <text x="184" y="314" font-family="Georgia, 'Times New Roman', serif" font-size="78" font-weight="700">AI</text>
+    <text x="184" y="414" font-family="Georgia, 'Times New Roman', serif" font-size="78" font-weight="700">Insight</text>
+  </g>
+  <g fill="#3d3935" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+    <text x="650" y="236" font-size="34" font-weight="700">매일의 방송을</text>
+    <text x="650" y="288" font-size="34" font-weight="700">AI 리포트로 읽다</text>
+    <text x="650" y="366" font-size="24" font-weight="500" fill="#6b6358">원본 영상의 흐름을 요약하고,</text>
+    <text x="650" y="404" font-size="24" font-weight="500" fill="#6b6358">핵심 쟁점과 관전 포인트를 정리합니다.</text>
+  </g>
+  <text x="112" y="562" fill="#8a8276" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" font-weight="600">AI-generated summary and analysis report</text>
+</svg>
